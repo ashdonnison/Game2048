@@ -6,10 +6,25 @@ public class Game2048
     private int ncol;
     private int[][] board;
 	private int gameState;
+	private int highScore = 0;
+	private int score = 0;
 	
 	
 	// Creates the Board
 	public Game2048(int r, int c)
+    {
+        nrow = r;
+        ncol = c;
+
+        board = new int[r][c];
+
+        for(int i=0; i<nrow; i++)
+            for(int j=0; j<ncol; j++)
+                board[i][j]=0;
+    }
+	
+	// Creates the Board
+	private void CustomBoard(int r, int c)
     {
         nrow = r;
         ncol = c;
@@ -26,24 +41,24 @@ public class Game2048
 	{	
 		switch (gameState){
 			case 0:		// Pre Game
-				System.out.println("1. Start New Game");
-				System.out.println("2. Start Custom Game");
-				System.out.println("3. Quit");
+				System.out.printf("1. Start New Game %n2. Start Custom Game %n3. Quit %n%nDecision: ");
+				ScanChar();
 			break;
 		
 			case 1:		// When game is playing
 				System.out.println("W.Up A.Left S.Down D.Right U.Undo R.Redo Q.Quit");
+				System.out.printf("Score: %d  High Score: %d %n%nNext Move: ", score, highScore); 
+				ScanChar();
 			break;
 		
 			case 2: 	// Custom Mode Board Size Selection		
-				System.out.println("What size board? (n*n)");
+				System.out.printf("%nWhat size board? (n*n)%n");
+				ScanInt();
 			break;
 			
 			default:
 			break;
 		}
-	
-		ScanInput();
 	}
 	
 	// Method that creates random 2's or 4's, and can input how many needed
@@ -65,13 +80,22 @@ public class Game2048
 		}
 	}
 	
-	// Scans the user input in command line
-	private void ScanInput()
+	// SCans for an Integer
+	private void ScanInt()
 	{
 		Scanner sc = new Scanner(System.in);
 		int i = sc.nextInt();
 		
 		Selection(i);
+	}
+	
+	// Scans Player/User Input of Character
+	private void ScanChar()
+	{
+		Scanner s = new Scanner(System.in);
+		char x = s.next().charAt(0);
+		
+		Selection(x);
 	}
 	
 	// Menu selection function, for both in-game menu and pre game menu's
@@ -81,17 +105,17 @@ public class Game2048
 		if (gameState == 0)
 		{
 			switch (sel) {
-				case 1:	// 1. Standard Game
+				case '1':	// 1. Standard Game
 					gameState = 1;
 					Rand2or4(2);
 					BoardPrint();
 				break;
 				
-				case 2:	// 2. Custom Game
+				case '2':	// 2. Custom Game
 					gameState = 2;
 				break;
 				
-				case 3:	// 3. Quit
+				case '3':	// 3. Quit
 					System.exit(0);
 				break;
 				
@@ -104,6 +128,38 @@ public class Game2048
 		// Game in Progress 
 		else if (gameState == 1)
 		{
+			switch(sel){
+				case 'W':	// Swipes Up
+				break;
+		
+				case 'A':	// Swipes Left
+					SwipeLeft();
+					AddNum();
+					SwipeLeft();
+					Rand2or4(1);
+				break;
+				
+				case 'S':	// Swipes Down
+				break;
+				
+				case 'D':	// Swipes Right
+				break;
+				
+				case 'Q':	// Quits Game back to main menu
+					gameState = 0;
+					CustomBoard(4, 4);
+					highScore = score;
+					score = 0;
+					System.out.printf("Quitting Game... %n%n");
+					Menu();
+				break;
+				
+				case '8':
+					Rand2or4(1);
+				
+				default:
+				break;
+			}
 			// Have in game move selection
 			BoardPrint();
 		}
@@ -111,7 +167,7 @@ public class Game2048
 		// Custom Game Setup
 		else if (gameState == 2)
 		{
-			Game2048(sel, sel);
+			CustomBoard(sel, sel);
 			Rand2or4(2);
 			gameState = 1;
 			BoardPrint();
@@ -124,6 +180,7 @@ public class Game2048
 	{
 		Menu();
 	}
+	
 	
 	// Method for printing the Board
 	private void BoardPrint()
@@ -142,5 +199,37 @@ public class Game2048
 		}
 		System.out.println();
 		Menu();
+	}
+
+	
+	//Pushes all the numbers to far left, without adding them
+	private void SwipeLeft()
+	{
+		for(int i = 0; i < nrow; i ++)
+			for(int j = 0; j < ncol; j ++)
+				if(board[i][j] == 0)
+					for (int k = (j+1); k < ncol; k ++)
+						if (board[i][k] != 0)
+						{
+							board[i][j] = board[i][k];
+							board[i][k] = 0;
+							k = ncol;
+						}
+	}
+	
+	
+	// Adds two numbers next to each other 
+	private void AddNum()
+	{
+		for(int i = 0; i < nrow; i ++)
+			for(int j = 1; j < ncol; j ++)
+				if(board[i][j] != 0)
+					if(board[i][j] == board [i][j-1])
+					{
+						board[i][j-1] = board[i][j-1] * 2;
+						score = score + board[i][j-1];
+						board[i][j] = 0;
+						j ++;
+					}
 	}	
 }
