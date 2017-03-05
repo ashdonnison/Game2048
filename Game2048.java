@@ -94,8 +94,8 @@ public class Game2048
 	{
 		Scanner s = new Scanner(System.in);
 		char x = s.next().charAt(0);
-		
-		Selection(x);
+		char xUp = Character.toUpperCase(x);	//Coverts to uppercase letter
+		Selection(xUp);
 	}
 	
 	// Menu selection function, for both in-game menu and pre game menu's
@@ -128,7 +128,8 @@ public class Game2048
 		// Game in Progress 
 		else if (gameState == 1)
 		{
-			switch(sel){
+			switch(sel)
+			{
 				case 'W':	// Swipes Up
 				break;
 		
@@ -154,13 +155,10 @@ public class Game2048
 					Menu();
 				break;
 				
-				case '8':
-					Rand2or4(1);
-				
 				default:
 				break;
 			}
-			// Have in game move selection
+	
 			BoardPrint();
 		}
 		
