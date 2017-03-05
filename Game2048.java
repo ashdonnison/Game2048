@@ -39,7 +39,8 @@ public class Game2048
 	// Method for menu
 	private void Menu()
 	{	
-		switch (gameState){
+		switch (gameState)
+		{
 			case 0:		// Pre Game
 				System.out.printf("1. Start New Game %n2. Start Custom Game %n3. Quit %n%nDecision: ");
 				ScanChar();
