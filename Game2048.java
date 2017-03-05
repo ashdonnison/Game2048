@@ -1,5 +1,12 @@
 import java.util.*;
 
+// Notes:
+// Only swipe left works at the moment
+// If board becomes full, game freezes up, there is no end game" implented yet
+// Default board size is 4*4
+// Custom game works, though there is no limit on size (min or max)
+// Score is live during game and a high score is stored when ended
+
 public class Game2048
 {
 	private int nrow;
@@ -90,7 +97,7 @@ public class Game2048
 		Selection(i);
 	}
 	
-	// Scans Player/User Input of Character
+	// Scans Player/User Input of Character in either lower or uppercase
 	private void ScanChar()
 	{
 		Scanner s = new Scanner(System.in);
@@ -149,8 +156,9 @@ public class Game2048
 				
 				case 'Q':	// Quits Game back to main menu
 					gameState = 0;
-					CustomBoard(4, 4);
-					highScore = score;
+					CustomBoard(4, 4); //Resets board back to default size
+					if(score > highScore)
+						highScore = score;
 					score = 0;
 					System.out.printf("Quitting Game... %n%n");
 					Menu();
